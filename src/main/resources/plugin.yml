@@ -1,0 +1,7 @@
+name: minecraft-challenge
+version: 1.0.0
+
+main: net.marcel.challenge.MinecraftChallenge
+
+commands:
+  timer:

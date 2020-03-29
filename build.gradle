@@ -1,0 +1,34 @@
+import java.nio.charset.StandardCharsets
+
+plugins {
+    id 'java'
+}
+
+group 'net.marcel.challenge'
+version '1.0.0'
+
+sourceCompatibility = 1.11
+
+repositories {
+    mavenCentral()
+
+    maven {
+        url "https://hub.spigotmc.org/nexus/content/repositories/snapshots"
+    }
+
+    maven {
+        url "https://oss.sonatype.org/content/repositories/snapshots"
+    }
+}
+
+compileJava.options.encoding = StandardCharsets.UTF_8
+
+dependencies {
+    implementation "org.spigotmc:spigot-api:1.15.2-R0.1-SNAPSHOT"
+}
+
+task copyJarToPluginsFolder(type: Copy) {
+    from "$buildDir/libs"
+    include '*.jar'
+    into "$projectDir/run/plugins"
+}
