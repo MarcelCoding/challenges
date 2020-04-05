@@ -5,3 +5,10 @@ main: net.marcel.challenge.MinecraftChallenge
 
 commands:
   timer:
+  distance:
+  invsee:
+  gamemode:
+  sethp:
+  spectator:
+    aliases:
+      - spec

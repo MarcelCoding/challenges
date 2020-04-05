@@ -3,7 +3,10 @@ package net.marcel.challenge;
 public enum Permission {
 
     TIMER_COMMAND("minecraft_challenge.command.timer"),
-    RESET_COMMAND("minecraft_challenge.command.reset");
+    RESET_COMMAND("minecraft_challenge.command.reset"),
+    INVSEE_COMMAND("minecraft_challenge.command.invsee"),
+    GAMEMODE_COMMAND("minecraft_challenge.command.gamemode"),
+    SET_HP_COMMAND("minecraft_challenge.command.sethp");
 
     final String content;
 

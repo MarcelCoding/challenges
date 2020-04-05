@@ -6,6 +6,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 public class Data {
 
@@ -38,5 +39,9 @@ public class Data {
 
     public long getAsLong(final String path) {
         return this.fileConfiguration.getLong(path);
+    }
+
+    public List<String> getAsStringList(final String path) {
+        return this.fileConfiguration.getStringList(path);
     }
 }

@@ -1,11 +1,14 @@
-package net.marcel.challenge.timer;
+package net.marcel.challenge.handler;
 
 import net.marcel.challenge.Color;
 import net.marcel.challenge.Utils;
 import net.marcel.challenge.data.Data;
+import net.marcel.challenge.handler.timer.Timer;
+import net.marcel.challenge.handler.timer.TimerType;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -27,7 +30,8 @@ public class TimerHandler {
     }
 
     public void save() {
-        this.timer.save(this.data, "timer");
+        if (this.timer != null) this.timer.save(this.data, "timer");
+        else this.data.set("timer", null);
     }
 
     public void start() {
@@ -45,14 +49,14 @@ public class TimerHandler {
 
     public void pause() {
         if (this.timer == null) {
-            throw new IllegalStateException("Timer is not configured.");
+            throw new IllegalStateException();
         }
         this.timer.pause();
     }
 
     public void reset() {
         if (this.timer == null) {
-            throw new IllegalStateException("Timer is not configured.");
+            throw new IllegalStateException();
         }
         this.timer = null;
     }
@@ -63,12 +67,12 @@ public class TimerHandler {
         }
 
         if (this.timer.getType().equals(TimerType.ASCENDING)) {
-            return Color.SECONDARY + "Playing since " + Color.PRIMARY + Utils.formatDuration(this.timer.getPlayingTimer()) + " Time" + Color.SECONDARY + " the challenge.";
+            return Color.SECONDARY + "Playing since " + Color.PRIMARY + ChatColor.BOLD + Utils.formatDuration(this.timer.getPlayingTimer()) + Color.SECONDARY + " the challenge.";
         } else {
             if (this.timer.isFinished()) {
                 return Color.SECONDARY + "The time is " + Color.PRIMARY + "over" + Color.SECONDARY + ".";
             } else {
-                return Color.SECONDARY + "You have " + Color.PRIMARY + Utils.formatDuration(this.timer.getLeftTime()) + " Time" + Color.SECONDARY + " left.";
+                return Color.SECONDARY + "You have " + Color.PRIMARY + ChatColor.BOLD + Utils.formatDuration(this.timer.getLeftTime()) + Color.SECONDARY + " left.";
             }
         }
     }

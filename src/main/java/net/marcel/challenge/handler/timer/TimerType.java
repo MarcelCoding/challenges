@@ -1,4 +1,4 @@
-package net.marcel.challenge.timer;
+package net.marcel.challenge.handler.timer;
 
 public enum TimerType {
 

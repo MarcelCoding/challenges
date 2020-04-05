@@ -1,4 +1,4 @@
-package net.marcel.challenge.timer;
+package net.marcel.challenge.handler.timer;
 
 import net.marcel.challenge.data.Data;
 
@@ -58,14 +58,14 @@ public class Timer {
         data.set(path + ".pause.whole_time", this.wholePauseTime.getSeconds());
     }
 
-    public void pause() {
+    public void pause() throws IllegalStateException {
         if (this.pauseStart != null) {
             throw new IllegalStateException("Timer is already paused.");
         }
         this.pauseStart = LocalDateTime.now();
     }
 
-    public void resume() {
+    public void resume() throws IllegalStateException {
         if (this.pauseStart == null) {
             throw new IllegalStateException("Timer is not paused.");
         }
@@ -74,7 +74,7 @@ public class Timer {
         this.pauseStart = null;
     }
 
-    public boolean isFinished() {
+    public boolean isFinished() throws IllegalStateException {
         if (this.type == TimerType.ASCENDING) {
             return false;
         } else {
