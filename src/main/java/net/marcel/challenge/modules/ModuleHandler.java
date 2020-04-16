@@ -1,6 +1,7 @@
 package net.marcel.challenge.modules;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.command.PluginCommand;
@@ -18,6 +19,8 @@ public class ModuleHandler {
     private final PluginManager pluginManager;
     @Getter
     private final Set<Module> modules;
+    @Setter
+    private ModuleData moduleData;
 
     public ModuleHandler(final Logger logger, final Server server) {
         this.logger = logger;

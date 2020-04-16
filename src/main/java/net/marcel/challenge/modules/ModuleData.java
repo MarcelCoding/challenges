@@ -51,7 +51,7 @@ public class ModuleData {
     }
 
     public void clean() {
-        this.json.entrySet().forEach((entry) -> this.json.remove(entry.getKey()));
+        this.json.entrySet().forEach(entry -> this.json.remove(entry.getKey()));
     }
 
     public void save() {

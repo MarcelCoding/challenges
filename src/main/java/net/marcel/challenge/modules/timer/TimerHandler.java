@@ -26,6 +26,7 @@ public class TimerHandler {
     private Timer timer;
 
     public void start() {
+        this.load();
         this.module.registerTask(Bukkit.getScheduler().runTaskTimerAsynchronously(this.module.getPlugin(), this::run, 30, 20));
     }
 
@@ -37,8 +38,8 @@ public class TimerHandler {
         final Long pauseStart = this.moduleData.get("pause_start", Long.class);
         final Long wholePauseTime = this.moduleData.get("whole_pause_time", Long.class);
 
-        if (start != null && duration != null && timerType != null && pauseStart != null && wholePauseTime != null) {
-            this.timer = new Timer(LocalDateTime.ofInstant(Instant.ofEpochMilli(start), ZoneOffset.UTC), Duration.ofMillis(duration), timerType, LocalDateTime.ofInstant(Instant.ofEpochMilli(pauseStart), ZoneOffset.UTC), Duration.ofMillis(wholePauseTime));
+        if (start != null && timerType != null && pauseStart != null && wholePauseTime != null) {
+            this.timer = new Timer(LocalDateTime.ofInstant(Instant.ofEpochMilli(start), ZoneOffset.UTC), duration == null ? null : Duration.ofSeconds(duration), timerType, LocalDateTime.ofInstant(Instant.ofEpochMilli(pauseStart), ZoneOffset.UTC), Duration.ofSeconds(wholePauseTime));
         }
     }
 
@@ -49,14 +50,13 @@ public class TimerHandler {
             this.moduleData.set("duration", duration == null ? null : this.timer.getDuration().getSeconds());
             this.moduleData.set("type", this.timer.getType());
 
-            this.moduleData.set("pause_start", this.timer.getPauseStart().atZone(ZoneOffset.UTC).toInstant().getEpochSecond());
+            this.moduleData.set("pause_start", this.timer.getPauseStart().atZone(ZoneOffset.UTC).toInstant().toEpochMilli());
             this.moduleData.set("whole_pause_time", this.timer.getWholePauseTime().getSeconds());
 
         } else this.moduleData.clean();
     }
 
     public void set(final Duration duration) {
-        this.load();
         this.timer = new Timer(LocalDateTime.now(), duration);
     }
 
