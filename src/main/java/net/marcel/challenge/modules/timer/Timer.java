@@ -1,13 +1,14 @@
 package net.marcel.challenge.modules.timer;
 
-import net.marcel.challenge.data.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 
+@AllArgsConstructor
+@Getter
 public class Timer {
 
     private final LocalDateTime start;
@@ -17,45 +18,16 @@ public class Timer {
     private LocalDateTime pauseStart;
     private Duration wholePauseTime;
 
-    private Timer(final LocalDateTime start, final Duration duration, final TimerType type) {
-        this.start = start;
-        this.duration = duration;
-        this.type = type;
-
-        this.wholePauseTime = Duration.of(0, ChronoUnit.SECONDS);
-        this.pauseStart = LocalDateTime.now();
+    public Timer(final LocalDateTime start) {
+        this(start, null, TimerType.ASCENDING);
     }
 
     public Timer(final LocalDateTime start, final Duration duration) {
         this(start, duration, TimerType.DESCENDING);
     }
 
-    public Timer(final LocalDateTime start) {
-        this(start, null, TimerType.ASCENDING);
-    }
-
-    public Timer(final Data data, final String path) {
-        this.start = ZonedDateTime.parse(data.getAsString(path + ".start")).toLocalDateTime();
-        this.duration = Duration.of(data.getAsLong(path + ".duration"), ChronoUnit.SECONDS);
-        this.type = TimerType.valueOf(data.getAsString(path + ".type"));
-
-        if (data.has(path + ".pause.start")) {
-            this.pauseStart = ZonedDateTime.parse(data.getAsString(path + ".pause.start")).toLocalDateTime();
-        }
-        this.wholePauseTime = Duration.of(data.getAsLong(path + ".pause.whole_time"), ChronoUnit.SECONDS);
-    }
-
-    public void save(final Data data, final String path) {
-        data.set(path + ".start", this.start.atOffset(ZoneOffset.UTC).toString());
-        data.set(path + ".duration", this.duration.getSeconds());
-        data.set(path + ".type", this.type.name());
-
-        if (this.pauseStart != null) {
-            data.set(path + ".pause.start", this.pauseStart.atOffset(ZoneOffset.UTC).toString());
-        } else {
-            data.set(path + ".pause.start", null);
-        }
-        data.set(path + ".pause.whole_time", this.wholePauseTime.getSeconds());
+    public Timer(final LocalDateTime start, final Duration duration, final TimerType type) {
+        this(start, duration, type, LocalDateTime.now(), Duration.of(0, ChronoUnit.SECONDS));
     }
 
     public void pause() throws IllegalStateException {
@@ -97,10 +69,6 @@ public class Timer {
 
     public boolean isPause() {
         return this.pauseStart != null;
-    }
-
-    public TimerType getType() {
-        return this.type;
     }
 
     private Duration getWholeDuration() {

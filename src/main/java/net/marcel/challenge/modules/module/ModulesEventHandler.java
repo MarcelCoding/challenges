@@ -36,6 +36,8 @@ public class ModulesEventHandler implements Listener {
         if (!ChatColor.stripColor(event.getView().getTitle()).startsWith("Modules [Page ")) return;
         event.setCancelled(true);
 
+        if (event.getCurrentItem() == null) return;
+
         if (event.getWhoClicked() instanceof Player) {
             final Player player = (Player) event.getWhoClicked();
             if (!player.hasPermission(Permission.MODULES.toString())) return;

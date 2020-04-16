@@ -5,6 +5,7 @@ import org.bukkit.GameMode;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 @RequiredArgsConstructor
@@ -18,7 +19,6 @@ public class TimerEventHandler implements Listener {
 
             // TODO: Remove ME / Disable Events when Module is disabeld.
             if (this.timerHandler != null) {
-
 
                 if (!this.timerHandler.isRunning()) {
                     event.setCancelled(true);
@@ -35,10 +35,21 @@ public class TimerEventHandler implements Listener {
             // TODO: Remove ME / Disable Events when Module is disabeld.
             if (this.timerHandler != null) {
 
-
                 if (!this.timerHandler.isRunning()) {
                     event.setCancelled(true);
                 }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onExplode(final EntityExplodeEvent event) {
+        // TODO: Remove ME / Disable Events when Module is disabeld.
+        if (this.timerHandler != null) {
+
+            if (!this.timerHandler.isRunning()) {
+                event.setCancelled(true);
+                event.blockList().clear();
             }
         }
     }

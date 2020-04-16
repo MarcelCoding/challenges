@@ -4,35 +4,59 @@ import lombok.RequiredArgsConstructor;
 import net.marcel.challenge.Color;
 import net.marcel.challenge.Utils;
 import net.marcel.challenge.modules.Module;
+import net.marcel.challenge.modules.ModuleData;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 
 import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Collection;
 
 @RequiredArgsConstructor
 public class TimerHandler {
 
-    private final Plugin plugin;
     private final Module module;
+    private final ModuleData moduleData;
     private Timer timer;
 
-    public void save() {
-//        if (this.timer != null) this.timer.save(this.data, "timer");
-//        else this.data.set("timer", null);
+    public void start() {
+        this.module.registerTask(Bukkit.getScheduler().runTaskTimerAsynchronously(this.module.getPlugin(), this::run, 30, 20));
     }
 
-    public void start() {
-        this.module.registerTask(Bukkit.getScheduler().runTaskTimerAsynchronously(this.plugin, this::run, 30, 20));
+    private void load() {
+        final Long start = this.moduleData.get("start", Long.class);
+        final Long duration = this.moduleData.get("duration", Long.class);
+        final TimerType timerType = this.moduleData.get("type", TimerType.class);
+
+        final Long pauseStart = this.moduleData.get("pause_start", Long.class);
+        final Long wholePauseTime = this.moduleData.get("whole_pause_time", Long.class);
+
+        if (start != null && duration != null && timerType != null && pauseStart != null && wholePauseTime != null) {
+            this.timer = new Timer(LocalDateTime.ofInstant(Instant.ofEpochMilli(start), ZoneOffset.UTC), Duration.ofMillis(duration), timerType, LocalDateTime.ofInstant(Instant.ofEpochMilli(pauseStart), ZoneOffset.UTC), Duration.ofMillis(wholePauseTime));
+        }
+    }
+
+    public void save() {
+        if (this.timer != null) {
+            this.moduleData.set("start", this.timer.getStart().atZone(ZoneOffset.UTC).toInstant().toEpochMilli());
+            final Duration duration = this.timer.getDuration();
+            this.moduleData.set("duration", duration == null ? null : this.timer.getDuration().getSeconds());
+            this.moduleData.set("type", this.timer.getType());
+
+            this.moduleData.set("pause_start", this.timer.getPauseStart().atZone(ZoneOffset.UTC).toInstant().getEpochSecond());
+            this.moduleData.set("whole_pause_time", this.timer.getWholePauseTime().getSeconds());
+
+        } else this.moduleData.clean();
     }
 
     public void set(final Duration duration) {
+        this.load();
         this.timer = new Timer(LocalDateTime.now(), duration);
     }
 
