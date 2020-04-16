@@ -1,14 +1,13 @@
 name: minecraft-challenge
 version: 1.0.0
+website: https://github.com/MarcelCoding/minecraft-challenge
+api-version: "1.15"
 
 main: net.marcel.challenge.MinecraftChallenge
 
 commands:
+  modules:
   timer:
   distance:
   invsee:
   gamemode:
-  sethp:
-  spectator:
-    aliases:
-      - spec

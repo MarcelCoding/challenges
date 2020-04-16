@@ -204,3 +204,5 @@ gradle-app.setting
 
 ### Custom ###
 run
+libs
+lombok.config

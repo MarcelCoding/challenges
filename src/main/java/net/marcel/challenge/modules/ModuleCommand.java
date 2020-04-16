@@ -1,30 +1,41 @@
-package net.marcel.challenge.commands;
+package net.marcel.challenge.modules;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import net.marcel.challenge.Message;
 import net.marcel.challenge.Permission;
-import org.bukkit.command.*;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.PluginCommand;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public abstract class ChallengeCommand implements CommandExecutor, TabCompleter {
+public abstract class ModuleCommand implements CommandExecutor, TabCompleter {
 
+    @Getter
     private final String name;
     private final String description;
     private final String usage;
     private final Permission permission;
 
-    public ChallengeCommand(final String name, final String description) {
+    @Setter(AccessLevel.PACKAGE)
+    private Module module;
+
+    public ModuleCommand(final String name, final String description) {
         this(name, description, "/" + name);
     }
 
-    public ChallengeCommand(final String name, final String description, final String usage) {
+    public ModuleCommand(final String name, final String description, final String usage) {
         this(name, description, usage, null);
     }
 
-    public ChallengeCommand(final String name, final String description, final String usage, final Permission permission) {
+    public ModuleCommand(final String name, final String description, final String usage, final Permission permission) {
         this.name = name.strip().toLowerCase();
         this.description = description.strip();
         this.usage = usage.strip().toLowerCase();
@@ -37,9 +48,11 @@ public abstract class ChallengeCommand implements CommandExecutor, TabCompleter 
 
     @Override
     public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
-        if (!this.onCommand0(sender, args)) {
-            sender.sendMessage(Message.WRONG_USAGE.format(this.usage));
-        }
+        if (this.module.isEnabled()) {
+            if (!this.onCommand0(sender, args)) {
+                sender.sendMessage(Message.WRONG_USAGE.format(this.usage));
+            }
+        } else sender.sendMessage(Message.MODULE_DISABLED.format(this.module.getName()));
 
         return true;
     }
@@ -47,7 +60,7 @@ public abstract class ChallengeCommand implements CommandExecutor, TabCompleter 
     @Override
     public List<String> onTabComplete(final CommandSender sender, final Command command, final String alias, final String[] args) {
         final List<String> results = new ArrayList<>();
-        this.onTabComplete0(results, sender, args);
+        if (this.module.isEnabled()) this.onTabComplete0(results, sender, args);
         return results.stream().filter(tabComplete -> tabComplete.toLowerCase().startsWith(args[args.length - 1].toLowerCase())).collect(Collectors.toList());
     }
 
@@ -68,9 +81,5 @@ public abstract class ChallengeCommand implements CommandExecutor, TabCompleter 
             sender.sendMessage(Message.ONLY_PLAYER.toString());
             return null;
         }
-    }
-
-    public String getName() {
-        return this.name;
     }
 }

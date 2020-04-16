@@ -1,9 +1,9 @@
-package net.marcel.challenge.feature;
+package net.marcel.challenge.modules.gamemode;
 
 import net.marcel.challenge.Color;
 import net.marcel.challenge.Message;
 import net.marcel.challenge.Permission;
-import net.marcel.challenge.commands.ChallengeCommand;
+import net.marcel.challenge.modules.ModuleCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.command.CommandSender;
@@ -13,17 +13,17 @@ import org.bukkit.entity.Player;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class GameModeCommand extends ChallengeCommand {
+public class GameModeCommand extends ModuleCommand {
 
     public GameModeCommand() {
         super("gamemode",
-                "Changes your or the Gamemode of other players.",
-                "/gamemode <survival/creative/spectator/adventure> [Player]",
+                "Changes your or the GameMode of other players.",
+                "/gamemode <GameMode> [Player]",
                 Permission.GAMEMODE_COMMAND);
     }
 
     @Override
-    protected boolean onCommand0(CommandSender sender, String[] args) {
+    protected boolean onCommand0(final CommandSender sender, final String[] args) {
         if (args.length == 1) {
 
             final Player player = this.checkForPlayer(sender);
@@ -72,9 +72,7 @@ public class GameModeCommand extends ChallengeCommand {
     @Override
     protected void onTabComplete0(final List<String> results, final CommandSender sender, final String[] args) {
         if (args.length == 1) {
-            for (final GameMode gameMode : GameMode.values()) {
-                results.add(gameMode.name().toLowerCase());
-            }
+            for (final GameMode gameMode : GameMode.values()) results.add(gameMode.name().toLowerCase());
         } else if (args.length == 2) {
             results.addAll(Bukkit.getOnlinePlayers().stream().map(HumanEntity::getName).collect(Collectors.toList()));
         }

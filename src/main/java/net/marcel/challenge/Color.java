@@ -1,7 +1,9 @@
 package net.marcel.challenge;
 
+import lombok.RequiredArgsConstructor;
 import org.bukkit.ChatColor;
 
+@RequiredArgsConstructor
 public enum Color {
 
     PRIMARY(ChatColor.GOLD),
@@ -10,12 +12,8 @@ public enum Color {
 
     final String content;
 
-    Color(final String content) {
-        this.content = content;
-    }
-
     Color(final ChatColor content) {
-        this.content = content.toString();
+        this(content.toString());
     }
 
     @Override

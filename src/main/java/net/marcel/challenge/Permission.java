@@ -1,18 +1,16 @@
 package net.marcel.challenge;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 public enum Permission {
 
     TIMER_COMMAND("minecraft_challenge.command.timer"),
-    RESET_COMMAND("minecraft_challenge.command.reset"),
     INVSEE_COMMAND("minecraft_challenge.command.invsee"),
     GAMEMODE_COMMAND("minecraft_challenge.command.gamemode"),
-    SET_HP_COMMAND("minecraft_challenge.command.sethp");
+    MODULES("minecraft_challenge.modules");
 
     final String content;
-
-    Permission(final String content) {
-        this.content = content;
-    }
 
     @Override
     public String toString() {

@@ -1,72 +1,63 @@
 package net.marcel.challenge;
 
-import net.marcel.challenge.commands.ChallengeCommand;
-import net.marcel.challenge.commands.SpectatorCommand;
-import net.marcel.challenge.commands.TimerCommand;
+import lombok.Getter;
 import net.marcel.challenge.data.Data;
-import net.marcel.challenge.feature.DistanceCommand;
-import net.marcel.challenge.feature.GameModeCommand;
-import net.marcel.challenge.feature.InvseeCommand;
-import net.marcel.challenge.feature.SetHpCommand;
-import net.marcel.challenge.handler.SpectatorHandler;
-import net.marcel.challenge.handler.TimerHandler;
+import net.marcel.challenge.modules.Module;
+import net.marcel.challenge.modules.ModuleHandler;
+import net.marcel.challenge.modules.chat.ChatModule;
+import net.marcel.challenge.modules.gamemode.GameModeModule;
+import net.marcel.challenge.modules.invsee.InvseeModule;
+import net.marcel.challenge.modules.module.ModuleModule;
+import net.marcel.challenge.modules.timer.TimerModule;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MinecraftChallenge extends JavaPlugin {
 
-    private final Set<ChallengeCommand> commands;
+    private final Logger logger;
+    @Getter
+    private final ModuleHandler moduleHandler;
 
-    private final TimerHandler timerHandler;
-    private final SpectatorHandler spectatorHandler;
     private Data data;
 
     public MinecraftChallenge() {
-        this.commands = new HashSet<>();
+        this.logger = this.getLogger();
+        this.moduleHandler = new ModuleHandler(this.logger, this.getServer());
+
 
         try {
             this.data = new Data(this.getDataFolder());
         } catch (IOException | InvalidConfigurationException e) {
-            e.printStackTrace();
+            this.logger.log(Level.SEVERE, "Unable to load Data System.", e);
         }
-
-        this.spectatorHandler = new SpectatorHandler(this.data);
-        this.timerHandler = new TimerHandler(this, this.data);
-
-        this.registerCommands();
-    }
-
-    private void registerCommands() {
-        this.commands.add(new TimerCommand(this.timerHandler));
-        this.commands.add(new DistanceCommand(this.spectatorHandler));
-        this.commands.add(new SpectatorCommand(this.spectatorHandler));
-        this.commands.add(new InvseeCommand());
-        this.commands.add(new GameModeCommand());
-        this.commands.add(new SetHpCommand());
     }
 
     @Override
     public void onEnable() {
         super.onEnable();
 
-        this.timerHandler.start();
-
-        this.commands.forEach(command -> command.register(this.getCommand(command.getName())));
+        this.moduleHandler.addModule(new ModuleModule(this));
+        this.moduleHandler.addModule(new TimerModule(this));
+        this.moduleHandler.addModule(new GameModeModule(this));
+        this.moduleHandler.addModule(new ChatModule(this));
+        this.moduleHandler.addModule(new InvseeModule(this));
     }
 
     @Override
     public void onDisable() {
         super.onDisable();
-        this.timerHandler.save();
-        this.spectatorHandler.save();
+        for (final Module module : this.moduleHandler.getModules()) {
+            module.onDisable0();
+        }
+
         try {
             this.data.save();
         } catch (IOException e) {
-            e.printStackTrace();
+            this.logger.log(Level.SEVERE, "Unable to save Data System.", e);
         }
     }
 }

@@ -1,14 +1,14 @@
-package net.marcel.challenge.handler;
+package net.marcel.challenge.modules.timer;
 
+import lombok.RequiredArgsConstructor;
 import net.marcel.challenge.Color;
 import net.marcel.challenge.Utils;
-import net.marcel.challenge.data.Data;
-import net.marcel.challenge.handler.timer.Timer;
-import net.marcel.challenge.handler.timer.TimerType;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
+import net.marcel.challenge.modules.Module;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.Particle;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -16,26 +16,20 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Collection;
 
+@RequiredArgsConstructor
 public class TimerHandler {
 
     private final Plugin plugin;
-    private final Data data;
+    private final Module module;
     private Timer timer;
 
-    public TimerHandler(final Plugin plugin, final Data data) {
-        this.plugin = plugin;
-        this.data = data;
-
-        if (data.has("timer")) this.timer = new Timer(this.data, "timer");
-    }
-
     public void save() {
-        if (this.timer != null) this.timer.save(this.data, "timer");
-        else this.data.set("timer", null);
+//        if (this.timer != null) this.timer.save(this.data, "timer");
+//        else this.data.set("timer", null);
     }
 
     public void start() {
-        Bukkit.getScheduler().runTaskTimerAsynchronously(this.plugin, this::run, 5 * 10, 20);
+        this.module.registerTask(Bukkit.getScheduler().runTaskTimerAsynchronously(this.plugin, this::run, 30, 20));
     }
 
     public void set(final Duration duration) {
@@ -79,9 +73,29 @@ public class TimerHandler {
 
     private void run() {
         final Collection<? extends Player> players = Bukkit.getOnlinePlayers();
-        if (players.size() > 0) {
-            final TextComponent textComponent = new TextComponent(this.getMessage());
-            players.forEach(player -> player.spigot().sendMessage(ChatMessageType.ACTION_BAR, textComponent));
+        if (!players.isEmpty()) {
+            final String message = this.getMessage();
+            for (Player player : players) {
+                player.sendActionBar(message);
+                if (!this.isRunning() && !player.getGameMode().equals(GameMode.SPECTATOR)) {
+
+                    final Location location = player.getLocation().add(0, 0.15, 0);
+                    final int particles = 50;
+                    final float radius = 1.25f;
+                    for (int i = 0; i < particles; i++) {
+                        final double angle = 2 * Math.PI * i / particles;
+                        final double x = Math.cos(angle) * radius;
+                        final double z = Math.sin(angle) * radius;
+                        location.add(x, 0, z);
+                        player.spawnParticle(Particle.SLIME, location, 1, 0, 0, 0, 0);
+                        location.subtract(x, 0, z);
+                    }
+                }
+            }
         }
+    }
+
+    public boolean isRunning() {
+        return !(this.timer == null || this.timer.isPause() || this.timer.isFinished());
     }
 }

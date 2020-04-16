@@ -1,9 +1,9 @@
-package net.marcel.challenge.feature;
+package net.marcel.challenge.modules.invsee;
 
 import net.marcel.challenge.Color;
 import net.marcel.challenge.Message;
 import net.marcel.challenge.Permission;
-import net.marcel.challenge.commands.ChallengeCommand;
+import net.marcel.challenge.modules.ModuleCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.HumanEntity;
@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class InvseeCommand extends ChallengeCommand {
+public class InvseeCommand extends ModuleCommand {
 
     public InvseeCommand() {
         super("invsee",
