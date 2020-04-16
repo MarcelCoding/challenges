@@ -16,16 +16,11 @@ repositories {
     maven {
         url "https://papermc.io/repo/repository/maven-public/"
     }
-
-//    maven {
-//        url "https://oss.sonatype.org/content/repositories/snapshots"
-//    }
 }
 
 compileJava.options.encoding = StandardCharsets.UTF_8
 
 dependencies {
-//    implementation "org.spigotmc:spigot-api:+"
     compileOnly "com.destroystokyo.paper:paper-api:+"
     implementation fileTree(dir: "libs", include: ["*.jar"])
 }
