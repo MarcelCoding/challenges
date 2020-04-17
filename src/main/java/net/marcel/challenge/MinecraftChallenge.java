@@ -8,7 +8,8 @@ import net.marcel.challenge.modules.chat.ChatModule;
 import net.marcel.challenge.modules.gamemode.GameModeModule;
 import net.marcel.challenge.modules.invsee.InvseeModule;
 import net.marcel.challenge.modules.module.ModuleModule;
-import net.marcel.challenge.modules.permissions.PermissionsModule;
+import net.marcel.challenge.modules.scoreboard.ScoreboardModule;
+import net.marcel.challenge.modules.teams.TeamsModule;
 import net.marcel.challenge.modules.timer.TimerModule;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -46,7 +47,8 @@ public class MinecraftChallenge extends JavaPlugin {
         this.moduleHandler.addModule(new GameModeModule(this));
         this.moduleHandler.addModule(new ChatModule(this));
         this.moduleHandler.addModule(new InvseeModule(this));
-        this.moduleHandler.addModule(new PermissionsModule(this));
+        this.moduleHandler.addModule(new TeamsModule(this));
+        this.moduleHandler.addModule(new ScoreboardModule(this));
     }
 
     @Override
