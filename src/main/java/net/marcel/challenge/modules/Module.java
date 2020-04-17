@@ -2,9 +2,9 @@ package net.marcel.challenge.modules;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import net.marcel.challenge.Challenges;
 import net.marcel.challenge.Color;
 import net.marcel.challenge.Message;
-import net.marcel.challenge.MinecraftChallenge;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -46,7 +46,7 @@ public abstract class Module {
     }
 
     public Module(final JavaPlugin plugin, final String name, final Material symbol, final String description) {
-        this.moduleHandler = JavaPlugin.getPlugin(MinecraftChallenge.class).getModuleHandler();
+        this.moduleHandler = JavaPlugin.getPlugin(Challenges.class).getModuleHandler();
 
         this.plugin = plugin;
         this.name = name;

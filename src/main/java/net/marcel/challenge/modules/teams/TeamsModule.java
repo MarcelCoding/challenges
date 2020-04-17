@@ -4,7 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import net.marcel.challenge.MinecraftChallenge;
+import net.marcel.challenge.Challenges;
 import net.marcel.challenge.modules.Module;
 import net.marcel.challenge.modules.ModuleData;
 import net.marcel.challenge.utils.JsonUtils;
@@ -32,7 +32,7 @@ public class TeamsModule extends Module {
     public TeamsModule(final JavaPlugin plugin) {
         super(plugin, "Teams", Material.PURPLE_BANNER, "Controls Teams for some Challenges.");
 
-        this.logger = JavaPlugin.getPlugin(MinecraftChallenge.class).getLogger();
+        this.logger = JavaPlugin.getPlugin(Challenges.class).getLogger();
         this.moduleData = new ModuleData(this);
         this.teams = new HashSet<>();
     }

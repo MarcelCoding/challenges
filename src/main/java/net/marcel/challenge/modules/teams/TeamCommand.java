@@ -14,7 +14,7 @@ public class TeamCommand extends ModuleCommand {
     private final TeamsModule teamsModule;
 
     public TeamCommand(final TeamsModule teamsModule) {
-        super("team", "Controles your Team.", "/team <join/leave/create> [Name]");
+        super("team", "Controls your Team.", "/team <join/leave/create> [Name]");
         this.teamsModule = teamsModule;
     }
 

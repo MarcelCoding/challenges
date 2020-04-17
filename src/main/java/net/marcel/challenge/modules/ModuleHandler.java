@@ -20,7 +20,7 @@ public class ModuleHandler {
     private final PluginManager pluginManager;
     @Getter
     private final Set<Module> modules;
-    private final Set<String> enabeld;
+    private final Set<String> enabled;
     @Setter
     private ModuleData data;
 
@@ -29,7 +29,7 @@ public class ModuleHandler {
         this.server = server;
         this.pluginManager = Bukkit.getPluginManager();
         this.modules = new HashSet<>();
-        this.enabeld = new HashSet<>();
+        this.enabled = new HashSet<>();
     }
 
     public void addModule(final Module module) {
@@ -48,7 +48,7 @@ public class ModuleHandler {
         module.register();
         module.getCommands().forEach(this::registerCommand);
         module.getEventHandlers().forEach(eventHandler -> this.pluginManager.registerEvents(eventHandler, module.getPlugin()));
-        if (!module.isHide() && !module.isEnabled() && this.enabeld.contains(module.getName())) module.setEnabled(true);
+        if (!module.isHide() && !module.isEnabled() && this.enabled.contains(module.getName())) module.setEnabled(true);
     }
 
     private void registerCommand(final ModuleCommand command) {
@@ -63,7 +63,7 @@ public class ModuleHandler {
 
         if (modulesJson != null) modulesJson.forEach(moduleNameJson -> {
             if (moduleNameJson.isJsonPrimitive()) {
-                this.enabeld.add(moduleNameJson.getAsString());
+                this.enabled.add(moduleNameJson.getAsString());
             }
         });
     }
