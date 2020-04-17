@@ -43,6 +43,8 @@ public class MinecraftChallenge extends JavaPlugin {
         super.onEnable();
 
         this.moduleHandler.addModule(new ModuleModule(this));
+        this.moduleHandler.loadState();
+
         this.moduleHandler.addModule(new TimerModule(this));
         this.moduleHandler.addModule(new GameModeModule(this));
         this.moduleHandler.addModule(new ChatModule(this));
@@ -54,6 +56,7 @@ public class MinecraftChallenge extends JavaPlugin {
     @Override
     public void onDisable() {
         super.onDisable();
+        this.moduleHandler.saveState();
         for (final Module module : this.moduleHandler.getModules()) {
             module.onDisable0();
         }

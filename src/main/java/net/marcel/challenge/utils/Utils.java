@@ -1,4 +1,4 @@
-package net.marcel.challenge;
+package net.marcel.challenge.utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,7 +12,7 @@ public class Utils {
     public static boolean createFile(final File file, final boolean folder) throws IOException {
         if (!file.exists()) {
             final File parent = file.getParentFile();
-            if (parent != null) if (!parent.exists()) createFile(parent, true);
+            if (parent != null && !parent.exists()) createFile(parent, true);
             if (folder) return file.mkdirs();
             else return file.createNewFile();
         }

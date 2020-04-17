@@ -25,6 +25,10 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
 }
 
+lombok {
+    config.put("lombok.equalsandhashcode.callsuper", "CALL")
+}
+
 task copyJarToPluginsFolder(type: Copy) {
     from "$buildDir/libs"
     include "*.jar"

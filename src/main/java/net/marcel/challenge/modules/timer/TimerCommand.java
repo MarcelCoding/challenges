@@ -17,7 +17,7 @@ public class TimerCommand extends ModuleCommand {
     public TimerCommand(final TimerHandler timerHandler) {
         super("timer",
                 "Help's you to control the timer.",
-                "/timer <resume|pause|reset|set> [minutes]",
+                "/timer <resume/pause/reset/set> [minutes]",
                 Permission.TIMER_COMMAND);
 
         this.timerHandler = timerHandler;

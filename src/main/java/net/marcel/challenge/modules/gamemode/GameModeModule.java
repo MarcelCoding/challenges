@@ -1,8 +1,10 @@
 package net.marcel.challenge.modules.gamemode;
 
+import lombok.EqualsAndHashCode;
 import net.marcel.challenge.modules.Module;
 import org.bukkit.plugin.java.JavaPlugin;
 
+@EqualsAndHashCode
 public class GameModeModule extends Module {
 
     public GameModeModule(final JavaPlugin plugin) {

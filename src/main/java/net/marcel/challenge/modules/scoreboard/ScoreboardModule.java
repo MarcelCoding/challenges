@@ -1,11 +1,13 @@
 package net.marcel.challenge.modules.scoreboard;
 
+import lombok.EqualsAndHashCode;
 import net.marcel.challenge.modules.Module;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.ScoreboardManager;
 
+@EqualsAndHashCode
 public class ScoreboardModule extends Module {
 
     private static final ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();

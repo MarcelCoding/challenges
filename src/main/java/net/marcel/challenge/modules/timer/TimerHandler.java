@@ -2,9 +2,9 @@ package net.marcel.challenge.modules.timer;
 
 import lombok.RequiredArgsConstructor;
 import net.marcel.challenge.Color;
-import net.marcel.challenge.Utils;
 import net.marcel.challenge.modules.Module;
 import net.marcel.challenge.modules.ModuleData;
+import net.marcel.challenge.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;

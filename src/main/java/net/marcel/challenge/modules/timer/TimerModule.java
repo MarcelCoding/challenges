@@ -1,10 +1,12 @@
 package net.marcel.challenge.modules.timer;
 
+import lombok.EqualsAndHashCode;
 import net.marcel.challenge.modules.Module;
 import net.marcel.challenge.modules.ModuleData;
 import org.bukkit.Material;
 import org.bukkit.plugin.java.JavaPlugin;
 
+@EqualsAndHashCode
 public class TimerModule extends Module {
 
     private final ModuleData moduleData;

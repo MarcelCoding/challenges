@@ -1,8 +1,8 @@
 package net.marcel.challenge.modules;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import net.marcel.challenge.Utils;
+import net.marcel.challenge.utils.JsonUtils;
+import net.marcel.challenge.utils.Utils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,8 +17,6 @@ import java.util.logging.Logger;
 
 public class ModuleData {
 
-    private static final Gson gson = new Gson();
-
     private final Logger logger;
     private final File file;
 
@@ -32,7 +30,7 @@ public class ModuleData {
         try {
             if (!Utils.createFile(this.file, false)) {
                 try (final Reader reader = new InputStreamReader(new FileInputStream(this.file))) {
-                    this.json = gson.fromJson(reader, JsonObject.class);
+                    this.json = JsonUtils.GSON.fromJson(reader, JsonObject.class);
                 }
             }
         } catch (IOException e) {
@@ -42,21 +40,20 @@ public class ModuleData {
     }
 
     public void set(final String key, final Object value) {
-        this.json.add(key, gson.toJsonTree(value));
+        JsonUtils.set(this.json, key, value);
     }
 
     public <T> T get(final String key, final Class<T> type) {
-        if (this.json.has(key)) return gson.fromJson(this.json.get(key), type);
-        else return null;
+        return JsonUtils.get(this.json, key, type);
     }
 
     public void clean() {
-        this.json.entrySet().forEach(entry -> this.json.remove(entry.getKey()));
+        this.json.entrySet().clear();
     }
 
     public void save() {
         try (final Writer writer = new OutputStreamWriter(new FileOutputStream(this.file))) {
-            gson.toJson(this.json, writer);
+            JsonUtils.GSON.toJson(this.json, writer);
         } catch (IOException e) {
             this.logger.log(Level.SEVERE, "Unable to save Module Data file \"" + this.file.getAbsolutePath() + "\".", e);
         }
