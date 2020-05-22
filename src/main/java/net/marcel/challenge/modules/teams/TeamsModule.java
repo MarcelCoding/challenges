@@ -10,14 +10,16 @@ import net.marcel.challenge.modules.ModuleData;
 import net.marcel.challenge.utils.JsonUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,12 +31,18 @@ public class TeamsModule extends Module {
     @Getter
     private final Set<Team> teams;
 
+    private final List<Consumer<Team>> createTeamCallbacks;
+    private final List<Consumer<Team>> deleteTeamCallbacks;
+
     public TeamsModule(final JavaPlugin plugin) {
-        super(plugin, "Teams", Material.PURPLE_BANNER, "Controls Teams for some Challenges.");
+        super(plugin, "Teams", "Controls Teams for some Challenges.");
 
         this.logger = JavaPlugin.getPlugin(Challenges.class).getLogger();
         this.moduleData = new ModuleData(this);
         this.teams = new HashSet<>();
+
+        this.createTeamCallbacks = new ArrayList<>();
+        this.deleteTeamCallbacks = new ArrayList<>();
     }
 
     @Override
@@ -125,13 +133,21 @@ public class TeamsModule extends Module {
             this.resetTeams(player);
             this.setupTeams(player);
         });
-        this.teams.removeIf(Team::isEmpty);
+        this.teams.forEach(team -> {
+            if (team.isEmpty()) this.deleteTeam(team);
+        });
     }
 
     public Team createTeam(final ChatColor color) {
         final Team team = new Team(this, color);
         this.teams.add(team);
+        this.createTeamCallbacks.forEach(callback -> callback.accept(team));
         return team;
+    }
+
+    public void deleteTeam(final Team team) {
+        this.createTeamCallbacks.forEach(callback -> callback.accept(team));
+        this.teams.remove(team);
     }
 
     public Team getTeam(final String name) {
@@ -146,5 +162,13 @@ public class TeamsModule extends Module {
     public Team getTeam(final OfflinePlayer player) {
         for (final Team team : this.teams) if (team.contains(player)) return team;
         return null;
+    }
+
+    public void registerCreateTeamCallback(final Consumer<Team> callback) {
+        this.createTeamCallbacks.add(callback);
+    }
+
+    public void registerDeleteTeamCallback(final Consumer<Team> callback) {
+        this.createTeamCallbacks.add(callback);
     }
 }

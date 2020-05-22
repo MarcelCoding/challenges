@@ -3,7 +3,7 @@ version: 1.0.0
 website: https://github.com/MarcelCoding/challenges
 api-version: "1.15"
 
-main: net.marcel.challenge.MinecraftChallenge
+main: net.marcel.challenge.Challenges
 
 commands:
   modules:
